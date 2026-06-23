@@ -572,15 +572,24 @@
   (function(){
     var tabs = document.querySelectorAll('.ag-tab');
     var panels = document.querySelectorAll('.ag-panel');
+    function selectCity(city){
+      tabs.forEach(function(t){t.classList.toggle('is-active', t.getAttribute('data-city')===city);});
+      panels.forEach(function(p){p.classList.toggle('is-hidden', p.getAttribute('data-panel')!==city);});
+    }
     tabs.forEach(function(tab){
-      tab.addEventListener('click', function(){
-        var city = tab.getAttribute('data-city');
-        tabs.forEach(function(t){t.classList.toggle('is-active', t===tab);});
-        panels.forEach(function(p){
-          p.classList.toggle('is-hidden', p.getAttribute('data-panel')!==city);
-        });
-      });
+      tab.addEventListener('click', function(){ selectCity(tab.getAttribute('data-city')); });
     });
+    function handleHash(){
+      var h = (location.hash || '').toLowerCase();
+      if(h.indexOf('feira')!==-1){ selectCity('feira'); }
+      else if(h.indexOf('aveiro')!==-1){ selectCity('aveiro'); }
+      if(h.indexOf('agenda')!==-1){
+        var el = document.getElementById('agenda');
+        if(el){ setTimeout(function(){ el.scrollIntoView(); }, 70); }
+      }
+    }
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
   })();
 
   (function(){
